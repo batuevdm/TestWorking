@@ -1,0 +1,84 @@
+﻿@{
+    TestWorking.Models.People people = Model;
+    ViewBag.Title = people.LastName + " " + people.FirstName + " " + people.MiddleName;
+}
+
+@using (Html.BeginForm("Edit/", "Contacts", FormMethod.Post))
+{
+    @Html.Hidden("PeopleID")
+<div class="form-group">
+    @Html.Label("LastName", "Фамилия")
+    @Html.TextBox("LastName", people.LastName, new { @class = "form-control" })
+    @Html.ValidationMessage("LastName")
+</div>
+<div class="form-group">
+    @Html.Label("FirstName", "Имя")
+    @Html.TextBox("FirstName", people.FirstName, new { @class = "form-control", required = "required" })
+    @Html.ValidationMessage("FirstName")
+</div>
+<div class="form-group">
+    @Html.Label("MiddleName", "Отчество")
+    @Html.TextBox("MiddleName", people.MiddleName, new { @class = "form-control" })
+    @Html.ValidationMessage("MiddleName")
+</div>
+<div class="form-group">
+    @Html.Label("Birthday", "Дата рождения")
+    @Html.TextBox("Birthday", people.Birthday.HasValue ? people.Birthday.Value.ToString("yyyy-MM-dd") : "", new { @class = "form-control", type = "date", min = "1900-01-01", max = DateTime.Now.ToString("yyyy-MM-dd") })
+    @Html.ValidationMessage("Birthday")
+</div>
+<div class="form-group">
+    @Html.Label("Organization", "Организация")
+    @Html.TextBox("Organization", people.Organization, new { @class = "form-control" })
+    @Html.ValidationMessage("Organization")
+</div>
+<div class="form-group">
+    @Html.Label("Post", "Должность")
+    @Html.TextBox("Post", people.Post, new { @class = "form-control" })
+    @Html.ValidationMessage("Post")
+</div>
+
+    <h3>Контакты</h3>
+    <div id="people-contacts" class="form-group">
+        @if (ViewBag.ContactType != null)
+        {
+            for (int i = 0; i < ViewBag.ContactType.Count; ++i)
+            {
+                <div class="people-contact row">
+                    <div class="col">
+                        @Html.DropDownList("ContactType", ViewBag.Types as SelectList, new { @class = "form-control col", id = "a", data_selected = ViewBag.ContactType[i] })
+                    </div>
+                    <div class="col">
+                        @Html.TextBox("ContactValue[]", ViewBag.ContactValue[i] as String, new { @class = "form-control col", placeholder = "Значение" })
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            foreach (var contact in people.PeopleContacts)
+            {
+                <div class="people-contact row">
+                    <div class="col">
+                        @Html.DropDownList("ContactType", ViewBag.Types as SelectList, new { @class = "form-control col", id = "a", data_selected = contact.Contact.ContactID })
+                    </div>
+                    <div class="col">
+                        @Html.TextBox("ContactValue[]", contact.Value, new { @class = "form-control col", placeholder = "Значение" })
+                    </div>
+                </div>
+            }
+            <div class="people-contact row">
+                <div class="col">
+                    @Html.DropDownList("ContactType", ViewBag.Types as SelectList, new { @class = "form-control col" })
+                </div>
+                <div class="col">
+                    @Html.TextBox("ContactValue[]", "", new { @class = "form-control col", placeholder = "Значение" })
+                </div>
+            </div>
+        }
+    </div>
+    <div>
+        <button class="btn btn-info btn-sm mb-2" id="add-contact" type="button" data-n="1">Добавить</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+}

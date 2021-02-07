@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Контакты";
+    TestWorking.Models.People people = Model;
+}
+<h2>@people.LastName @people.FirstName @people.MiddleName</h2>
+
+<h3>Информация</h3>
+
+<p>
+    @Html.ActionLink("Редактировать", "Edit", "Contacts", new { ID = people.PeopleID }, new { @class = "btn btn-warning"})
+    @Html.ActionLink("Удалить", "Delete", "Contacts", new { ID = people.PeopleID }, new { @class = "btn btn-danger", onclick = "return deleteContact()"})
+</p>
+
+@if (people.Birthday != null)
+{
+    <p>Дата рождения: @people.Birthday.Value.ToShortDateString()</p>
+}
+@if (people.Organization != null)
+{
+    <p>Организация: @people.Organization</p>
+}
+@if (people.Post != null)
+{
+    <p>Должность: @people.Post</p>
+}
+
+@foreach (var contact in people.PeopleContacts)
+{
+    <p>@contact.Contact.Type: @contact.Value</p>
+}

@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Контакты";
+}
+
+<h2>Контакты</h2>
+
+<p>
+    @using (Html.BeginForm("Index", "Contacts", FormMethod.Get, new { @class = "form-inline" }))
+    {
+        <div class="input-group w-100">
+            @Html.TextBox("search", "", new { @class = "form-control rounded", type = "search", placeholder = "Поиск", required = "required" })
+            <button type="submit" class="btn btn-outline-primary">Найти</button>
+        </div>
+    }
+</p>
+
+<p>
+    @Html.ActionLink("Создать новый", "Add", new { }, new { @class = "btn btn-success"})
+</p>
+
+<div class="list-group">
+    @foreach (TestWorking.Models.PeopleContact peopleContact in Model)
+    {
+        var people = peopleContact.People;
+        @Html.ActionLink(people.LastName + " " + people.FirstName + " " + people.MiddleName, "People", "Contacts", new { id = people.PeopleID }, new { @class = "list-group-item list-group-item-action" });
+    }
+</div>
